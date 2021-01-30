@@ -74,3 +74,14 @@ def test_org_body_headers():
     assert c.org_body == ['* Top level',
                           '** Second level',
                           '****** Sixth level']
+
+def test_org_body_unordered_lists():
+    c = Convertor()
+    c.load(['* Item one',
+            '* Item two',
+            '** Nested item 1',
+            '*** Nested item 2'])
+    assert c.org_body == ['- Item one',
+                          '- Item two',
+                          '\t- Nested item 1',
+                          '\t\t- Nested item 2']

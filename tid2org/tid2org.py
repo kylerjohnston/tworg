@@ -68,9 +68,16 @@ class Convertor:
                 match = re.match(r'^(!+).+', line).groups()[0]
                 org_body.append(self.__org_fmt(
                     line.replace(match, '*' * len(match))))
+            elif line.startswith('*'):
+                match = re.match(r'^(\*+).+', line).groups()[0]
+                org_body.append(self.__org_fmt(
+                    line.replace(match, '\t' * (len(match) - 1) + '-')))
             else:
                 org_body.append(self.__org_fmt(line))
         return org_body
+
+    def __str__(self):
+        return '\n'.join(self.org_header) + '\n'.join(self.org_body)
 
     def __org_fmt(self, string):
         """ Given a string in WikiText formatting, return it with
