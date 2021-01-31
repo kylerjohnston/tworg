@@ -77,7 +77,7 @@ class Convertor:
         return org_body
 
     def __str__(self):
-        return '\n'.join(self.org_header) + '\n'.join(self.org_body)
+        return '\n'.join(self.org_header) + '\n' + ''.join(self.org_body)
 
     def __org_fmt(self, string):
         """ Given a string in WikiText formatting, return it with
