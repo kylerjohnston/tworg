@@ -1,5 +1,4 @@
 """
-TODO: Fix links
 TODO: Fix source blocks --- look at the example org output
 """
 import re
@@ -86,11 +85,37 @@ class Convertor:
     def __org_fmt(self, string):
         """ Given a string in WikiText formatting, return it with
         org formatting """
-        return (string.replace('`', '~')
+        return (self.__fmt_links(string)
+                .replace('`', '~')
                 .replace("''", '*')
                 .replace('//', '/')
                 .replace('__', '_')
                 .replace('~~', '+'))
+
+    def __fmt_links(self, string):
+        """ Given a string, replace any links formatted TiddlyWiki WikiText-style
+        with links formatted org-mode style. Return the new string. """
+        links = re.findall(r'\[\[([^\]\|]+\|?[^\]]+)?\]\]', string)
+        for link in links:
+            try:
+                desc, target = link.split('|')
+            except ValueError:
+                desc, target = None, link
+            if re.match(r'^(https?:\/\/|mailto:)', target):
+                prefix = ''
+            elif target.startswith('file://'):
+                prefix = ''
+                target = target.replace('file://', 'file:')
+            else:
+                prefix = 'roam:'
+
+            if desc:
+                new_link = f'[[{prefix}{target}][{desc}]]'
+            else:
+                new_link = f'[[{prefix}{target}]]'
+
+            string = string.replace(f'[[{link}]]', new_link)
+        return string
 
     def __split_tags(self, tags):
         """ Given a string of tags from a .tid file, split it into a list of

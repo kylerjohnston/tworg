@@ -85,3 +85,20 @@ def test_org_body_unordered_lists():
                           '- Item two',
                           '\t- Nested item 1',
                           '\t\t- Nested item 2']
+
+def test_fmt_links():
+    translations = [('[[Tiddler Title]]',
+                     '[[roam:Tiddler Title]]'),
+                    ('[[Displayed Link Title|Tiddler Title]]',
+                     '[[roam:Tiddler Title][Displayed Link Title]]'),
+                    ('[[TW5|https://tiddlywiki.com/]]',
+                     '[[https://tiddlywiki.com/][TW5]]'),
+                    ('[[Mail me|mailto:me@where.net]]',
+                     '[[mailto:me@where.net][Mail me]]'),
+                    ('[[Open file|file:///users/me/index.html]]',
+                     '[[file:/users/me/index.html][Open file]]'),
+                    ('[[Link one]] and then [[Another link|http://google.com]]',
+                     '[[roam:Link one]] and then [[http://google.com][Another link]]')]
+    c = Convertor()
+    for tid, org in translations:
+        assert c._Convertor__fmt_links(tid) == org
