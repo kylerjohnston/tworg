@@ -39,9 +39,9 @@ print('Hello world')
 ```"""
     c = Convertor()
     c.load(code_block.split('\n'))
-    assert c.org_body == ['#+BEGIN_SRC python',
+    assert c.org_body == ['#+BEGIN_SRC python\n',
                           "print('Hello world')",
-                          '#+END_SRC']
+                          '#+END_SRC\n']
 
 def test_org_body_block_quote():
     block_quote = """<<<
@@ -49,9 +49,9 @@ Computers are like a bicycle for our minds
 <<< Steve Jobs"""
     c = Convertor()
     c.load(block_quote.split('\n'))
-    assert c.org_body == ['#+BEGIN_QUOTE',
+    assert c.org_body == ['#+BEGIN_QUOTE\n',
                           'Computers are like a bicycle for our minds',
-                          '#+END_QUOTE']
+                          '#+END_QUOTE\n']
 
 def test_org_body_formatting():
     c = Convertor()

@@ -1,6 +1,3 @@
-"""
-TODO: Fix source blocks --- look at the example org output
-"""
 import re
 
 class Convertor:
@@ -48,13 +45,13 @@ class Convertor:
         for line in self.tid_body:
             if len(multiline_tmp) > 0:
                 if multiline_type == 'code' and line.startswith('```'):
-                    multiline_tmp.append('#+END_SRC')
+                    multiline_tmp.append('#+END_SRC\n')
                     org_body += multiline_tmp
                     multiline_tmp = []
                 elif multiline_type == 'quote' and line.startswith('<<<'):
                     # TODO: What to do with quote attribution? Does org-mode
                     # have an attribute for that?
-                    multiline_tmp.append('#+END_QUOTE')
+                    multiline_tmp.append('#+END_QUOTE\n')
                     org_body += multiline_tmp
                     multiline_tmp = []
                 else:
@@ -62,10 +59,10 @@ class Convertor:
             elif line.startswith('```'):
                 match = re.match(r'^```(\w*)', line)
                 lang = match.groups()[0]
-                multiline_tmp.append(f'#+BEGIN_SRC {lang}')
+                multiline_tmp.append(f'#+BEGIN_SRC {lang}\n')
                 multiline_type = 'code'
             elif line.startswith('<<<'):
-                multiline_tmp.append('#+BEGIN_QUOTE')
+                multiline_tmp.append('#+BEGIN_QUOTE\n')
                 multiline_type = 'quote'
             elif line.startswith('!'):
                 match = re.match(r'^(!+).+', line).groups()[0]
@@ -145,5 +142,4 @@ class Convertor:
                 tmp.append(tag.strip('[['))
             else:
                 tags.append(tag)
-
         return tags
