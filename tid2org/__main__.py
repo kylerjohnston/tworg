@@ -13,10 +13,15 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     for fp in args.tiddler:
-        c = Convertor()
-        with open(fp, 'r') as f:
-            c.load(f)
-        if c.metadata['title']:
-            with open(os.path.join(
-                    args.output[0], c.metadata['title'] + '.org'), 'w') as f:
-                print(c, file=f)
+        print(fp)
+        # Ignore system tiddlers
+        if not fp.split('/')[-1].startswith('$_'):
+            c = Convertor()
+            with open(fp, 'r') as f:
+                c.load(f)
+            if c.metadata['title']:
+                with open(os.path.join(
+                        args.output[0],
+                        c.metadata['title'].replace('/', '_') + '.org'),
+                          'w') as f:
+                    print(c, file=f)

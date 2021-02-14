@@ -125,21 +125,7 @@ class Convertor:
         This method will convert spaces within a tag to underscores. So, in the
         example above, [[Load Testing]] will become Load_Testing.
         """
-        split = tags.split(' ')
-        tags = []
-
-        tmp = []
-
-        for tag in split:
-            if len(tmp) > 0:
-                if tag.endswith(']]'):
-                    tmp.append(tag.strip(']]'))
-                    tags.append('_'.join(tmp))
-                    tmp = []
-                else:
-                    tags.append(tmp)
-            elif tag.startswith('[['):
-                tmp.append(tag.strip('[['))
-            else:
-                tags.append(tag)
-        return tags
+        tags_w_spaces = re.findall(r'\[\[([^\]]+)\]\]', tags)
+        for tag in tags_w_spaces:
+            tags = tags.replace(f'[[{tag}]]', tag.replace(' ', '_'))
+        return tags.split(' ')

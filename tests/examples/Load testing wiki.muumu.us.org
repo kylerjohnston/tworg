@@ -1,0 +1,145 @@
+#+TITLE: Load testing wiki.muumu.us
+#+AUTHOR: krj
+#+TAGS: Load_Testing Node.js Docker nginx notes.muumu.us PM2
+
+I want to compare performance of:
+
+- The app running in [[roam:Docker]] vs. "bare metal" [[roam:Node.js]]
+- gzip compression at the [[roam:nginx]] layer vs. [[roam:TiddlyWiki]] layer
+
+Plan: siege, 25 concurrent connections, 1 minute.
+
+Enable detailed CloudWatch metrics first; update memory metric cron to run every minute.
+
+** First run - Docker, no compression
+siege results:
+
+#+BEGIN_SRC json
+{	"transactions":			         500,
+	"availability":			      100.00,
+	"elapsed_time":			       59.18,
+	"data_transferred":		      160.29,
+	"response_time":		        2.72,
+	"transaction_rate":		        8.45,
+	"throughput":			        2.71,
+	"concurrency":			       22.99,
+	"successful_transactions":	         525,
+	"failed_transactions":		           0,
+	"longest_transaction":		        6.49,
+	"shortest_transaction":		        0.09
+}
+#+END_SRC
+
+CPU utilization: 39%
+
+Memory utilization: 68.8%
+
+** Second run - Node.js, no compression
+
+Forgot to turn the docker daemon off, may have impacted results. These are the results:
+
+#+BEGIN_SRC json
+{	"transactions":			         552,
+	"availability":			      100.00,
+	"elapsed_time":			       59.56,
+	"data_transferred":		      177.01,
+	"response_time":		        2.59,
+	"transaction_rate":		        9.27,
+	"throughput":			        2.97,
+	"concurrency":			       24.01,
+	"successful_transactions":	         577,
+	"failed_transactions":		           0,
+	"longest_transaction":		        5.79,
+	"shortest_transaction":		        0.09
+}
+#+END_SRC
+
+CPU utilization: 76%
+
+Memory utilization: 62.17%
+
+Running again, with Docker stopped. About the same results:
+
+#+BEGIN_SRC json
+{	"transactions":			         552,
+	"availability":			      100.00,
+	"elapsed_time":			       59.65,
+	"data_transferred":		      177.05,
+	"response_time":		        2.57,
+	"transaction_rate":		        9.25,
+	"throughput":			        2.97,
+	"concurrency":			       23.74,
+	"successful_transactions":	         577,
+	"failed_transactions":		           0,
+	"longest_transaction":		        5.53,
+	"shortest_transaction":		        0.09
+}
+#+END_SRC
+
+CPU utilization: 46%
+
+Memory utilization: 58.9%
+
+** Third run; Node.js managed by PM2, no compression, default config
+
+#+BEGIN_SRC bash
+pm2 start tiddlywiki -- /srv/wiki --listen host=0.0.0.0 port=8080
+#+END_SRC
+
+#+BEGIN_SRC json
+{	"transactions":			         568,
+	"availability":			      100.00,
+	"elapsed_time":			       59.41,
+	"data_transferred":		      182.22,
+	"response_time":		        2.55,
+	"transaction_rate":		        9.56,
+	"throughput":			        3.07,
+	"concurrency":			       24.33,
+	"successful_transactions":	         593,
+	"failed_transactions":		           0,
+	"longest_transaction":		        5.63,
+	"shortest_transaction":		        0.09
+}
+#+END_SRC
+
+CPU utilization: 74%
+
+Memory utilization: 58.72%
+
+** Fourth run; PM2, cluster mode
+
+#+BEGIN_SRC bash
+pm2 start tiddlywiki -i max -- /srv/wiki --listen host=0.0.0.0 port=8080
+#+END_SRC
+
+Is this working right? I'm thinking it's not. Nope. It's not. TiddlyWiki can't see changes written to its tiddlers directory that it didn't make without the process reloading. So it's not aware of the changes the other Tiddlywiki process is making. Can't have multiple Tiddlywiki processes running at once.
+
+As a side note, ~pm2 monit~ is super slick and made this pretty obvious quickly.
+
+** Fifth run; PM2, Tiddlywiki gzip
+
+#+BEGIN_SRC bash
+pm2 start tiddlywiki -- /srv/wiki --listen host=0.0.0.0 port=8080 gzip=yes
+#+END_SRC
+
+#+BEGIN_SRC json
+{	"transactions":			         402,
+	"availability":			      100.00,
+	"elapsed_time":			       59.40,
+	"data_transferred":		      103.06,
+	"response_time":		        3.51,
+	"transaction_rate":		        6.77,
+	"throughput":			        1.74,
+	"concurrency":			       23.74,
+	"successful_transactions":	         427,
+	"failed_transactions":		           0,
+	"longest_transaction":		        7.65,
+	"shortest_transaction":		        0.09
+}
+#+END_SRC
+
+CPU utilization: 58%
+
+Memory utilization: 63.2%
+
+So, pretty significant effect on throughput. Are the data gains worth it?

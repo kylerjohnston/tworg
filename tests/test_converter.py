@@ -24,6 +24,16 @@ def test_load():
     assert convertor.metadata['tags'] == split_tags
     assert len(convertor.tid_body) == 142
 
+def test_multiple_split_tags():
+    c = Convertor()
+    with open(os.path.join(working_dir,
+                           'examples/Ansible for DevOps_ Server and configuration management for humans.tid'),
+              'r') as f:
+        c.load(f)
+    tags = ['Ansible', 'Books', 'read', 'to_read', 'Read_in_2020',
+            'in_digital_library']
+    assert c.metadata['tags'] == tags
+
 def test_split_tags():
     assert convertor._Convertor__split_tags(
         '[[Load Testing]] Node.js Docker nginx notes.muumu.us PM2') == split_tags
