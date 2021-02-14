@@ -43,6 +43,20 @@ def test_org_header():
                                     '#+AUTHOR: krj',
                                     f"#+TAGS: {' '.join(split_tags)}"]
 
+def test_org_header_missing_fields():
+    header_mappings = [(['title: A title\n', 'tags: One Two Three'],
+                        ['#+TITLE: A title',
+                         '#+TAGS: One Two Three']),
+                       (['creator: Me', 'tags: One Two Three'],
+                        ['#+AUTHOR: Me', '#+TAGS: One Two Three']),
+                       (['No header here.'],
+                        [])]
+    for tid, org in header_mappings:
+        c = Convertor()
+        c.load(tid)
+        assert c.org_header == org
+
+
 def test_org_body_code_block():
     code_block = """```python
 print('Hello world')

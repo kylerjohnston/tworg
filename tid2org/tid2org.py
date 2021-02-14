@@ -32,9 +32,13 @@ class Convertor:
     @property
     def org_header(self):
         """ Return org-formatted header metadata as a list of lines """
-        return [f"#+TITLE: {self.metadata['title']}",
-                f"#+AUTHOR: {self.metadata['creator']}",
-                f"#+TAGS: {' '.join(self.metadata['tags'])}"]
+        field_mappings = {'title': 'TITLE',
+                          'creator': 'AUTHOR'}
+        header = [f'#+{field_mappings[x]}: {self.metadata[x]}'
+                  for x in field_mappings if self.metadata[x]]
+        if self.metadata['tags']:
+            header.append(f"#+TAGS: {' '.join(self.metadata['tags'])}")
+        return header
 
     @property
     def org_body(self):
