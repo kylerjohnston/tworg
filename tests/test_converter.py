@@ -43,6 +43,12 @@ def test_org_header():
                                     '#+AUTHOR: krj',
                                     f"#+TAGS: {' '.join(split_tags)}"]
 
+def test_ignore_color_header():
+    c = Convertor()
+    c.load(['color: green',
+            'something'])
+    assert c.tid_body == ['something']
+
 def test_org_header_missing_fields():
     header_mappings = [(['title: A title\n', 'tags: One Two Three'],
                         ['#+TITLE: A title',

@@ -10,6 +10,7 @@ class Convertor:
             'modifier': None,
             'tags': [],
             'title': None,
+            'color': None
         }
         self.tid_body = []
 
@@ -17,7 +18,7 @@ class Convertor:
         """ Read an iterative object containing TiddlyWiki WikiText strings """
         keywords_regex = '|'.join(self.metadata.keys())
         for line in fp:
-            metadata_match = re.match(rf"^({keywords_regex}|type): (.*)", line)
+            metadata_match = re.match(rf"^({keywords_regex}|type):\s?(.*)?", line)
             if metadata_match:
                 key, value = metadata_match.groups()
                 if key == 'tags':
