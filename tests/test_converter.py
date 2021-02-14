@@ -118,7 +118,7 @@ def test_org_body_unordered_lists():
 
 def test_fmt_links():
     translations = [('[[Tiddler Title]]',
-                     '[[roam:Tiddler Title]]'),
+                     '[[roam:Tiddler Title][Tiddler Title]]'),
                     ('[[Displayed Link Title|Tiddler Title]]',
                      '[[roam:Tiddler Title][Displayed Link Title]]'),
                     ('[[TW5|https://tiddlywiki.com/]]',
@@ -128,7 +128,7 @@ def test_fmt_links():
                     ('[[Open file|file:///users/me/index.html]]',
                      '[[file:/users/me/index.html][Open file]]'),
                     ('[[Link one]] and then [[Another link|http://google.com]]',
-                     '[[roam:Link one]] and then [[http://google.com][Another link]]')]
+                     '[[roam:Link one][Link one]] and then [[http://google.com][Another link]]')]
     c = Convertor()
     for tid, org in translations:
         assert c._Convertor__fmt_links(tid) == org

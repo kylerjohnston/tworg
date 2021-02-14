@@ -114,7 +114,7 @@ class Convertor:
             if desc:
                 new_link = f'[[{prefix}{target}][{desc}]]'
             else:
-                new_link = f'[[{prefix}{target}]]'
+                new_link = f'[[{prefix}{target}][{target}]]'
 
             string = string.replace(f'[[{link}]]', new_link)
         return string
