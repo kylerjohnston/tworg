@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "tworg"
+version = "0.1.0"
+description = "Convert TiddlyWiki tiddler files to org mode"
+authors = ["Kyle Johnston <kyle@muumu.us>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.2"
+python-language-server = "^0.36.2"
+
+[tool.poetry.scripts]
+tworg = 'tworg.console:run'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
