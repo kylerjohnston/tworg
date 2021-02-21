@@ -1,6 +1,6 @@
 import os
 
-from tid2org.tid2org import Convertor
+from tworg.tworg import Convertor
 
 
 working_dir =  os.path.realpath(

@@ -2,7 +2,7 @@
 import argparse
 import os
 
-from .tid2org import Convertor
+from .tworg import Convertor
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
