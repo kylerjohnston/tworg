@@ -1,9 +1,13 @@
 [tool.poetry]
 name = "tworg"
 version = "0.1.0"
-description = "Convert TiddlyWiki tiddler files to org mode"
+description = "Convert TiddlyWiki tiddler files to Org Mode"
 authors = ["Kyle Johnston <kyle@muumu.us>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/kylerjohnston/tworg"
+repository = "https://github.com/kylerjohnston/tworg"
+include = ['LICENSE']
 
 [tool.poetry.dependencies]
 python = "^3.9"
