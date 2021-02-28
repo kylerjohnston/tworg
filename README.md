@@ -8,6 +8,14 @@ This is not at all production-ready and was written as a one-off thing to conver
 - It replaces links to other tiddlers with Org-roam links. Thus, it assumes you are using [Org-roam](https://www.orgroam.com/).
 - Definitely not 100% coverage of the TiddlyWiki markup syntax.
 
+## Installation
+
+With [pipx](https://github.com/pipxproject/pipx):
+
+``` shell
+pipx install tworg
+```
+
 ## Usage
 
 ``` shell
