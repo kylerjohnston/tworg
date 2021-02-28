@@ -5,7 +5,8 @@ import os
 from .tworg import Convertor
 
 def run():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description='Convert .tid TiddlyWiki files into Org Mode files.')
     parser.add_argument('tiddler', type=str, nargs='+',
                         help='Tiddlers to convert')
     parser.add_argument('-o', '--output', type=str, nargs=1, required=False,
